@@ -13,7 +13,7 @@ PATH = '../'
 #PATH = '/kaggle/working/'
 
 #options include: random_ticker_list, sp500, sample_list, debug 
-LIST = 'sample_list'
+LIST = 'debug'
 
 
 #initialize zip file
