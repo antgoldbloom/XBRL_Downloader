@@ -5,13 +5,14 @@ import shutil
 import os
 import zipfile
 import re
-from XBRL_Downloader import Downloader, create_ticker_to_cik_dict, create_cik_to_ticker_dict  
+from download_sec_edgar_filings_utility_script import Downloader, create_ticker_to_cik_dict, create_cik_to_ticker_dict  
 
 
 PATH = '../'
+#PATH = '/kaggle/working/'
 LIST = 'sample_list'
 
-def fetch_ticker_list(list_name='sample_list'): 
+def fetch_cik_list(list_name='sample_list'): 
     
     if list_name == 'all_companies':
         resp = requests.get('https://www.sec.gov/include/ticker.txt')
@@ -37,7 +38,8 @@ def fetch_ticker_list(list_name='sample_list'):
     return cik_list
 
 
-def write_zip(zip_file,zip_root_path):
+def write_zip(zip_file,PATH):
+    zip_root_path = f"{PATH}sec_filings"
     for dirname, _, filenames in os.walk(zip_root_path):
         for filename in filenames:
             zip_full_path = os.path.join(dirname, filename)
@@ -51,22 +53,20 @@ def write_zip(zip_file,zip_root_path):
 start_time = time()
 
 
-zip_save_path = f"{PATH}{LIST}.zip"
-zip_file = zipfile.ZipFile(zip_save_path, 'w',zipfile.ZIP_DEFLATED)
-zip_root_path = '{PATH}sec_filings'
+#initialize zip file
+zip_file = zipfile.ZipFile(f"{PATH}{LIST}.zip", 'w',zipfile.ZIP_DEFLATED)
 
-cik_list = fetch_ticker_list(LIST)
+cik_list = fetch_cik_list(LIST)
 
-for cik in cik_list:
+for cik in cik_list[:1]:
     cik_to_ticker_dict = create_cik_to_ticker_dict()
     print(cik_to_ticker_dict[cik])
 
     dl = Downloader(PATH)
-
     dl.get("10-Q", cik)
     dl.get("10-K", cik)
 
-    zip_file = write_zip(zip_file,zip_root_path)
+    zip_file = write_zip(zip_file,PATH)
     
     try:
         shutil.rmtree(f"{PATH}sec_filings", ignore_errors=False, onerror=None)
