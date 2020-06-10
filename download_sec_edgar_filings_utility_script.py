@@ -127,6 +127,7 @@ def get_filing_urls_to_download(
             start, count, cik, filing_type, before_date, ownership
         )
         edgar_search_url = f"{SEC_EDGAR_BASE_URL}{qs}"
+
         resp = requests.get(edgar_search_url)
         resp.raise_for_status()
 
