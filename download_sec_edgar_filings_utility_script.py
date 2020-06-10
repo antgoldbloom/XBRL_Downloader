@@ -175,8 +175,12 @@ def get_filing_urls_to_download(
         )
         edgar_search_url = f"{SEC_EDGAR_BASE_URL}{qs}"
 
-        resp = requests.get(edgar_search_url)
-        resp.raise_for_status()
+        try:
+            resp = requests.get(edgar_search_url)
+            resp.raise_for_status()
+        except:
+            print("failed to download {edgar_search_url}")
+            return []
 
         # An HTML page is returned when an invalid ticker is entered
         # Filter out non-XML responses
