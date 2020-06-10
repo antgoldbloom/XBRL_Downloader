@@ -36,7 +36,7 @@ import requests
 from lxml import etree
 from bs4 import BeautifulSoup
 import csv
-import np
+import numpy as np
 
 import random
 import os
