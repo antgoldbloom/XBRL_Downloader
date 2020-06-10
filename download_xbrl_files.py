@@ -1,58 +1,19 @@
 from time import time
 import requests
-import csv
+
+
 import shutil
 import os
 import zipfile
 import re
-from download_sec_edgar_filings_utility_script import Downloader, create_ticker_to_cik_dict, create_cik_to_ticker_dict  
 
+from download_sec_edgar_filings_utility_script import Downloader, create_ticker_to_cik_dict, create_cik_to_ticker_dict, write_zip, fetch_cik_list 
 
 PATH = '../'
 #PATH = '/kaggle/working/'
-LIST = 'sp500'
 
-def fetch_cik_list(list_name='sample_list'): 
-    
-    if list_name == 'all_companies':
-        resp = requests.get('https://www.sec.gov/include/ticker.txt')
-        ticker_text = resp.content.decode('utf-8')
-        ticker_list = list(csv.reader(ticker_text.splitlines(), delimiter='\t'))
-        # ITERATION = 1
-        # INCREMENT=10
-        # end = INCREMENT*ITERATION
-        # start = end - INCREMENT
-        
-    elif list_name == 'sp500':
-        ticker_list = ['MMM','ABT','ABBV','ABMD','ACN','ATVI','ADBE','AMD','AAP','AES','AFL','A','APD','AKAM','ALK','ALB','ARE','ALXN','ALGN','ALLE','AGN','ADS','LNT','ALL','GOOGL','GOOG','MO','AMZN','AMCR','AEE','AAL','AEP','AXP','AIG','AMT','AWK','AMP','ABC','AME','AMGN','APH','ADI','ANSS','ANTM','AON','AOS','APA','AIV','AAPL','AMAT','APTV','ADM','ARNC','ANET','AJG','AIZ','ATO','T','ADSK','ADP','AZO','AVB','AVY','BKR','BLL','BAC','BK','BAX','BDX','BRK.B','BBY','BIIB','BLK','BA','BKNG','BWA','BXP','BSX','BMY','AVGO','BR','BF.B','CHRW','COG','CDNS','CPB','COF','CPRI','CAH','KMX','CCL','CAT','CBOE','CBRE','CDW','CE','CNC','CNP','CTL','CERN','CF','SCHW','CHTR','CVX','CMG','CB','CHD','CI','XEC','CINF','CTAS','CSCO','C','CFG','CTXS','CLX','CME','CMS','KO','CTSH','CL','CMCSA','CMA','CAG','CXO','COP','ED','STZ','COO','CPRT','GLW','CTVA','COST','COTY','CCI','CSX','CMI','CVS','DHI','DHR','DRI','DVA','DE','DAL','XRAY','DVN','FANG','DLR','DFS','DISCA','DISCK','DISH','DG','DLTR','D','DOV','DOW','DTE','DUK','DRE','DD','DXC','ETFC','EMN','ETN','EBAY','ECL','EIX','EW','EA','EMR','ETR','EOG','EFX','EQIX','EQR','ESS','EL','EVRG','ES','RE','EXC','EXPE','EXPD','EXR','XOM','FFIV','FB','FAST','FRT','FDX','FIS','FITB','FE','FRC','FISV','FLT','FLIR','FLS','FMC','F','FTNT','FTV','FBHS','FOXA','FOX','BEN','FCX','GPS','GRMN','IT','GD','GE','GIS','GM','GPC','GILD','GL','GPN','GS','GWW','HRB','HAL','HBI','HOG','HIG','HAS','HCA','PEAK','HP','HSIC','HSY','HES','HPE','HLT','HFC','HOLX','HD','HON','HRL','HST','HPQ','HUM','HBAN','HII','IEX','IDXX','INFO','ITW','ILMN','IR','INTC','ICE','IBM','INCY','IP','IPG','IFF','INTU','ISRG','IVZ','IPGP','IQV','IRM','JKHY','J','JBHT','SJM','JNJ','JCI','JPM','JNPR','KSU','K','KEY','KEYS','KMB','KIM','KMI','KLAC','KSS','KHC','KR','LB','LHX','LH','LRCX','LW','LVS','LEG','LDOS','LEN','LLY','LNC','LIN','LYV','LKQ','LMT','L','LOW','LYB','MTB','M','MRO','MPC','MKTX','MAR','MMC','MLM','MAS','MA','MKC','MXIM','MCD','MCK','MDT','MRK','MET','MTD','MGM','MCHP','MU','MSFT','MAA','MHK','TAP','MDLZ','MNST','MCO','MS','MOS','MSI','MSCI','MYL','NDAQ','NOV','NTAP','NFLX','NWL','NEM','NWSA','NWS','NEE','NLSN','NKE','NI','NBL','JWN','NSC','NTRS','NOC','NLOK','NCLH','NRG','NUE','NVDA','NVR','ORLY','OXY','ODFL','OMC','OKE','ORCL','PCAR','PKG','PH','PAYX','PAYC','PYPL','PNR','PBCT','PEP','PKI','PRGO','PFE','PM','PSX','PNW','PXD','PNC','PPG','PPL','PFG','PG','PGR','PLD','PRU','PEG','PSA','PHM','PVH','QRVO','PWR','QCOM','DGX','RL','RJF','RTN','O','REG','REGN','RF','RSG','RMD','RHI','ROK','ROL','ROP','ROST','RCL','SPGI','CRM','SBAC','SLB','STX','SEE','SRE','NOW','SHW','SPG','SWKS','SLG','SNA','SO','LUV','SWK','SBUX','STT','STE','SYK','SIVB','SYF','SNPS','SYY','TMUS','TROW','TTWO','TPR','TGT','TEL','FTI','TFX','TXN','TXT','TMO','TIF','TJX','TSCO','TDG','TRV','TFC','TWTR','TSN','UDR','ULTA','USB','UAA','UA','UNP','UAL','UNH','UPS','URI','UTX','UHS','UNM','VFC','VLO','VAR','VTR','VRSN','VRSK','VZ','VRTX','VIAC','V','VNO','VMC','WRB','WAB','WMT','WBA','DIS','WM','WAT','WEC','WFC','WELL','WDC','WU','WRK','WY','WHR','WMB','WLTW','WYNN','XEL','XRX','XLNX','XYL','YUM','ZBRA','ZBH','ZION','ZTS']
-
-    elif list_name == 'sample_list':
-        ticker_list = ['GOOG','MSFT','AMZN','NVDA','ORCL','INTC','CRM','TSLA','FB','AAPL','NFLX','ZM','BYND','OKTA','ZM','ZEN','ADBE','UBER','LYFT','PINS','CRWD','SVMK']
-    elif list_name == 'debug':
-        ticker_list = ['ZM']
-
-    ticker_to_cik_dict = create_ticker_to_cik_dict()
-    cik_list = []
-    for ticker in ticker_list:
-        cik_list.append(ticker_to_cik_dict[ticker])
-    
-
-    return cik_list
-
-
-def write_zip(zip_file,PATH):
-    zip_root_path = f"{PATH}sec_filings"
-    for dirname, _, filenames in os.walk(zip_root_path):
-        for filename in filenames:
-            zip_full_path = os.path.join(dirname, filename)
-            zip_arc_name = zip_full_path[len(zip_root_path):]
-            zip_file.write(zip_full_path,f"/sec_filings{zip_arc_name}")
-
-    
-    return zip_file
-
-
-start_time = time()
+#options include: random_ticker_list, sp500, sample_list, debug 
+LIST = 'random_ticker_list'
 
 
 #initialize zip file
@@ -60,9 +21,14 @@ zip_file = zipfile.ZipFile(f"{PATH}{LIST}.zip", 'w',zipfile.ZIP_DEFLATED)
 
 cik_list = fetch_cik_list(LIST)
 
+count = 1
+
 for cik in cik_list:
+
+    start_time = time()
+
     cik_to_ticker_dict = create_cik_to_ticker_dict()
-    print(cik_to_ticker_dict[cik])
+    print(f"{cik_to_ticker_dict[cik]} ({count} of {len(cik_list)})")
 
     dl = Downloader(PATH)
     dl.get("10-Q", cik)
@@ -74,7 +40,8 @@ for cik in cik_list:
         shutil.rmtree(f"{PATH}sec_filings", ignore_errors=False, onerror=None)
     except:
         print("No 10-K or 10-K found for this company")
+
+    count += 1
+    print(time() - start_time)
     
 zip_file.close()
-
-print(time() - start_time)
