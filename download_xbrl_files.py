@@ -9,7 +9,7 @@ import re
 
 from download_sec_edgar_filings_utility_script import Downloader, create_ticker_to_cik_dict, create_cik_to_ticker_dict, write_zip, fetch_cik_list 
 
-PATH = '../'
+PATH = '../data/xbrl/'
 #PATH = '/kaggle/working/'
 
 #options include: random_ticker_list, sp500, sample_list, debug 
@@ -39,7 +39,7 @@ for cik in cik_list:
     try:
         shutil.rmtree(f"{PATH}sec_filings", ignore_errors=False, onerror=None)
     except:
-        print("No 10-K or 10-K found for this company")
+        print("No 10-Q or 10-K found for this company")
 
     count += 1
     print(time() - start_time)
