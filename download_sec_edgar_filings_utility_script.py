@@ -66,7 +66,7 @@ def fetch_cik_list(list_name='sample_list'):
     elif list_name == 'sample_list':
         ticker_list = ['GOOG','MSFT','AMZN','NVDA','ORCL','INTC','CRM','TSLA','FB','AAPL','NFLX','ZM','ZEN','ADBE','UBER','LYFT','ZG','WORK','OKTA','BYND']
     elif list_name == 'debug':
-        ticker_list = ['ZG']
+        ticker_list = ['AMZN']
 
     ticker_to_cik_dict = create_ticker_to_cik_dict()
     cik_list = []
@@ -222,6 +222,7 @@ def get_filing_urls_to_download(
                 xbrl_files['lab']=soup.find('td',text='EX-101.LAB').parent.find('a',href=re.compile('xml')).get_text()
                 xbrl_files['pre']=soup.find('td',text='EX-101.PRE').parent.find('a',href=re.compile('xml')).get_text()
                 xbrl_files['xsd']=soup.find('td',text='EX-101.SCH').parent.find('a',href=re.compile('xsd')).get_text()
+                xbrl_files['cal']=soup.find('td',text='EX-101.CAL').parent.find('a',href=re.compile('xml')).get_text()
 
                 period_end=soup.find('div',text='Period of Report').parent.find('div',text=re.compile('[0-9]{4}-[0-9]{2}-[0-9]{2}')).get_text()
             

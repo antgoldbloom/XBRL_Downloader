@@ -9,6 +9,8 @@ import re
 
 from download_sec_edgar_filings_utility_script import Downloader, create_ticker_to_cik_dict, create_cik_to_ticker_dict, write_zip, fetch_cik_list 
 
+W3_NAMESPACE = {"w3": "http://www.w3.org/2005/Atom"}
+
 PATH = '../data/xbrl/'
 #PATH = '/kaggle/working/'
 
